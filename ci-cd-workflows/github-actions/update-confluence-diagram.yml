@@ -1,0 +1,46 @@
+name: Sample Deployment
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - 'closed'
+
+jobs:
+  deployment:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Build & Deployment Steps
+        run: echo "Build & Deployment Steps ...."
+
+      # First step is to generate AWS diagram using Cloudviz API and save it as SVG file
+      - name: Generate Live AWS Diagram
+        env:
+          AWS_REGION: 'eu-west-1'
+          CLOUDVIZ_AWS_ACCOUNT_ID: '9f910f00-5c5a-11ee-b12d-57664c9998b0'
+          OUTPUT_FILE: 'live-diagram.svg'
+        run: |
+          curl 'https://api.cloudviz.io/aws/accounts/${{ env.CLOUDVIZ_AWS_ACCOUNT_ID }}/${{ env.AWS_REGION }}/svg' \
+          -H 'x-api-key: ${{ secrets.CLOUDVIZ_API_KEY}}' \
+          -o ${{ env.OUTPUT_FILE }}
+
+      # Last step is to update Confluence diagram using Confluence Cloud API
+      - name: Update Confluence Diagram
+        env:
+          CONFLUENCE_CONTENT_ID: 65936
+          CONFLUENCE_ATTACHMENT_ID: 491526
+          CONFLUENCE_URL: 'https://cloudviz.atlassian.net'
+          OUTPUT_FILE: 'live-diagram.svg'
+        run: |
+          curl -D- \
+            -u ${{ secrets.CONFLUENCE_USER_NAME}}:${{ secrets.CONFLUENCE_API_TOKEN}} \
+            -H 'X-Atlassian-Token: nocheck' \
+            -F 'file=@${{ env.OUTPUT_FILE }}' \
+            -X POST '${{ env.CONFLUENCE_URL }}/wiki/rest/api/content/${{ env.CONFLUENCE_CONTENT_ID }}/child/attachment/${{ env.CONFLUENCE_ATTACHMENT_ID }}/data'

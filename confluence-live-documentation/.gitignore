@@ -1,0 +1,14 @@
+# local env file
+.env*
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Serverless directories
+.serverless
+.idea
+
+# Dependencies
+node_modules/**
