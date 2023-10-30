@@ -1,0 +1,16 @@
+{
+  "name": "confluence-documentation",
+  "version": "1.0.0",
+  "description": "Live documentation for Confluence using Cloudviz API",
+  "type": "module",
+  "scripts": {
+    "build": "serverless package",
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {
+    "serverless": "^3.36.0"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-ssm": "^3.437.0"
+  }
+}

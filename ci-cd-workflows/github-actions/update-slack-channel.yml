@@ -1,0 +1,44 @@
+name: Sample Deployment
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - 'closed'
+
+jobs:
+  deployment:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Build & Deployment Steps
+        run: echo "Build & Deployment Steps ...."
+
+      # First step is to generate AWS diagram using Cloudviz API and save it as SVG file
+      - name: Generate Live AWS Diagram
+        env:
+          AWS_REGION: 'eu-west-1'
+          CLOUDVIZ_AWS_ACCOUNT_ID: '9f910f00-5c5a-11ee-b12d-57664c9998b0'
+          OUTPUT_FILE: 'live-diagram.svg'
+        run: |
+          curl 'https://api.cloudviz.io/aws/accounts/${{ env.CLOUDVIZ_AWS_ACCOUNT_ID }}/${{ env.AWS_REGION }}/svg' \
+          -H 'x-api-key: ${{ secrets.CLOUDVIZ_API_KEY}}' \
+          -o ${{ env.OUTPUT_FILE }}
+
+      # Send generated diagram to Slack channel
+      - name: Send Diagram to Slack Channel
+        env:
+          SLACK_CHANNEL_ID: 'C05U1BKTPA9'
+          OUTPUT_FILE: 'live-diagram.svg'
+        run: |
+          curl -F 'file=@${{ env.OUTPUT_FILE }}' \
+          -F 'token=${{ secrets.SLACK_API_TOKEN}}' \
+          -F 'channels=${{ env.SLACK_CHANNEL_ID }}' \
+          -F 'filename=${{ env.OUTPUT_FILE }}' \
+          -X POST https://slack.com/api/files.upload

@@ -1,0 +1,33 @@
+service: confluence-documentation
+
+# exclude all the files/folders by default and include individually in the functions
+package:
+  individually: true
+  patterns:
+    - '!./**'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'eu-west-1'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ssm:GetParameter
+          Resource:
+            - arn:aws:ssm:${self:provider.region}:*:parameter/CLOUDVIZ_CONFIG
+            - arn:aws:ssm:${self:provider.region}:*:parameter/CONFLUENCE_CONFIG
+
+functions:
+  update-documentation:
+    handler: src/documentation-handler.handler
+    timeout: 600 # for large AWS accounts, you might need to increase this value
+    memorySize: 1024
+    events:
+      - schedule: cron(0 0 * * ? *) # generate new documentation every day at midnight
+    package:
+      patterns:
+        - src/**
