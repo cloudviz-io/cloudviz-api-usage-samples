@@ -38,7 +38,7 @@ Configuration parameters help to generate documentation using [Cloudviz API](htt
 | Parameter             | Description   | Cool  |
 | -------------         |:-------------:|:-----|
 | confluenceSpaceId        | Number | Confluence space id where live documentation will be placed. Documentation pages will be created under Space default homepage |
-| confluenceUrl             | String     | Full Confluence url ex. "https://<your-confluence-name>.atlassian.net" |
+| confluenceUrl             | String     | Full Confluence url ex. "https://your-confluence-name.atlassian.net" |
 | confluenceApiToken                | String  |  Confluence API token |
 | confluenceUserName                | String     | Confluence user name ex. "your@email.com"  |
 
