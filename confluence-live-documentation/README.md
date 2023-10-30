@@ -5,7 +5,7 @@ This is functional example for generating AWS documentation based on live data f
   
 ![](img/confluence-aws-documentation.gif)
   
-This is example result page structure in Confluence:
+Documentation page structure in Confluence:
 ```
 AWS Account 1  
 -----Region 1  
@@ -22,7 +22,7 @@ Configuration parameters help to generate documentation using [Cloudviz API](htt
 - Cloudviz configuration (`CLOUDVIZ_CONFIG`) parameters:
 
 | Parameter             | Type   | Description  |
-| -------------         |:-------------:| -----:|
+| -------------         |:-------------:|:----- |
 | cloudvizApiKey        | String  |    Your Cloudviz API key |
 | accountId             | String  |   Cloudviz AWS account id     |
 | documentationConfig     | Array of Objects  | See example below     |
@@ -36,7 +36,7 @@ Configuration parameters help to generate documentation using [Cloudviz API](htt
 - Confluence configuration (`CONFLUENCE_CONFIG`) parameters:
   
 | Parameter             | Description   | Cool  |
-| -------------         |:-------------:| -----:|
+| -------------         |:-------------:|:-----|
 | confluenceSpaceId        | Number | Confluence space id where live documentation will be placed. Documentation pages will be created under Space default homepage |
 | confluenceUrl             | String     | Full Confluence url ex. "https://<your-confluence-name>.atlassian.net" |
 | confluenceApiToken                | String  |  Confluence API token |
@@ -69,7 +69,7 @@ Create two configuration parameters (as SecureString) in [AWS Systems Manager Pa
 ```
 {
     "confluenceSpaceId": "123456",
-    "confluenceUrl": "https://<your-confluence-name>.atlassian.net",
+    "confluenceUrl": "https://your-confluence-name.atlassian.net",
     "confluenceApiToken": "<confluence-api-key>",
     "confluenceUserName": "your@email.com" 
 }
@@ -81,4 +81,4 @@ Create two configuration parameters (as SecureString) in [AWS Systems Manager Pa
 
 ### Deployment to AWS
 
-`npm run deploy --stage <name> --region <aws-region>` will deploy simple `confluence-live-documentation` service to your AWS account (not mandatory to be your account that you document)
+`npm run deploy --stage <name> --region <aws-region>` will deploy simple `confluence-documentation` service to your AWS account (not mandatory to be account that you document)
